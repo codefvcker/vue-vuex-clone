@@ -49,36 +49,37 @@ const mutations = {
 
 export const actionTypes = {
   register: '[auth] register',
+  login: '[auth] login',
 }
 
 const actions = {
   [actionTypes.register]({ commit }, credentials) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       commit(mutationTypes.registerStart)
       authApi
         .register(credentials)
-        .then((response) => {
+        .then(response => {
           commit(mutationTypes.registerSuccess, response.data.user)
           setItem('accessToken', response.data.user.token)
           resolve(response.data.user)
         })
-        .catch((result) => {
+        .catch(result => {
           commit(mutationTypes.registerFailure, result.response.data.errors)
           console.log('result errors - ', result)
         })
     })
   },
   [actionTypes.login]({ commit }, credentials) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       commit(mutationTypes.loginStart)
       authApi
         .login(credentials)
-        .then((response) => {
+        .then(response => {
           commit(mutationTypes.loginSuccess, response.data.user)
           setItem('accessToken', response.data.user.token)
           resolve(response.data.user)
         })
-        .catch((result) => {
+        .catch(result => {
           commit(mutationTypes.loginFailure, result.response.data.errors)
           console.log('result errors - ', result)
         })
@@ -86,8 +87,21 @@ const actions = {
   },
 }
 
+export const getterTypes = {
+  currentUser: '[auth] currentUsser',
+  isLoggedIn: '[auth] isLoggedIn',
+  isAnonymous: '[auth] isAnonimous',
+}
+
+const getters = {
+  [getterTypes.currentUser]: state => state.currentUser,
+  [getterTypes.isLoggedIn]: state => Boolean(state.isLoggedIn),
+  [getterTypes.isAnonymous]: state => state.isLoggedIn === false,
+}
+
 export default {
   state,
   mutations,
   actions,
+  getters,
 }

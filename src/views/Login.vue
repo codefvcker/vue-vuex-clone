@@ -46,6 +46,7 @@
 <script>
 import McvValidationErrors from '@/components/ValidationErrors'
 import { actionTypes } from '@/store/modules/auth'
+import { mapState } from 'vuex'
 
 export default {
   name: 'McvLogin',
@@ -59,12 +60,10 @@ export default {
     }
   },
   computed: {
-    isSubmitting() {
-      return this.$store.state.auth.isSubmitting
-    },
-    validationErrors() {
-      return this.$store.state.auth.validationErrors
-    },
+    ...mapState({
+      isSubmitting: state => state.auth.isSubmiting,
+      validationErrors: state => state.auth.validationErrors,
+    }),
   },
   methods: {
     onSubmit() {
@@ -74,7 +73,7 @@ export default {
           email: this.email,
           password: this.password,
         })
-        .then((user) => {
+        .then(user => {
           this.$router.push({ name: 'home' })
         })
     },
